@@ -23,7 +23,11 @@
  */
 
 $string['pluginname'] = 'CSV format';
-$string['pluginname_help'] = 'This is a CSV format for importing and exporting multiple choice questions (All-or-nothing plugin must be installed) more then one answers from a CSV(Comma separated value) file. Please find the Sample csv <a href="/question/format/csv/sample.csv">sample.csv</a> file for your reference.';
+$string['pluginname_help'] = 'This is a CSV format for importing multiple choice questions (All-or-nothing plugin must be installed)£¬truefalse questions from a CSV(Comma separated value) file. Please find the Sample csv file for your reference.<br />
+		<a href="/question/format/csv/multichoice.csv">multichoice.csv</a><br />
+		<a href="/question/format/csv/sampleTruefalse.csv">sampleTruefalse.csv</a><br />
+		<a href="/question/format/csv/sampleShortanswer.csv">sampleShortanswer.csv</a><br />
+		<a href="/question/format/csv/sampleEssay.csv">sampleEssay.csv</a><br />';
 $string['pluginname_link'] = 'qformat/csv';
 $string['commma_error'] = '<font color="#990000"> Upload failed. Unnecessary Comma(,) found in <b> Question {$a} </b><br /> Please remove the comma(,) from the field or Put the entire text between the double quotes(" "), So the coomma(,) between them can be ignored. <br /></font>';
 $string['newline_error'] = '<font color="#990000">Upload failed. New Line found in <b> Question {$a} . </b> Make sure that entire question with choices and answers are in one line itself.<br /> Please correct this question and try importing again. <br /> No Question has been imported.</font>';

@@ -1,0 +1,7 @@
+﻿multichoicename,questiontext,choices,answer,generalfeedback,defaultmark,qtype
+"多选题示例1,3个正确答案",这是All-or-Nothing多选题1，答案是（）？,选项A正确;选项B错误;选项C正确;选项D正确;选项E错误,ACD,通用反馈，正确答案ACD,2,multichoice
+"多选题示例2,4个正确答案",这是All-or-Nothing多选题2，答案是（）？,选项A正确;选项B正确;选项C正确;选项D正确,ABCD,通用反馈，正确答案ABCD,2,multichoice
+"多选题示例3,3个正确答案",这是All-or-Nothing多选题3，答案是（）？,选项A正确;选项B错误;选项C正确;选项D正确,ACD,通用反馈，正确答案ACD,2,multichoice
+单选题1,moodle单选题1，选择（）？,选项A正确;选项B错误;选项C错误;选项D错误,A,通用反馈，答案是A,1,single
+单选题2,moodle单选题2，选择（）？,选项A错误;选项B正确;选项C错误;选项D错误,B,通用反馈，答案是B,1,single
+单选题3,moodle单选题3，选择（）？,选项A错误;选项B错误;选项C正确;选项D错误,C,通用反馈，答案是C,1,single

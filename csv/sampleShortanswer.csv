@@ -1,0 +1,4 @@
+﻿shortanswername,questiontext,answer,fraction,generalfeedback,defaultmark
+这是个填空题1,这里应该填什么___?,哈哈哈;哈哈;哈哈哈哈,1;0.5;0,通用反馈，标准答案：哈哈哈,1
+这是个填空题2,这里A应该填什么___?,AAA;AA;AAAA,1;0.5;1,通用反馈，标准答案：AAA,2
+这是个填空题3,这里B应该填什么___?,BBB;BBBB;BBBBB,1;0.5;0.5,通用反馈，标准答案：BBB,3
