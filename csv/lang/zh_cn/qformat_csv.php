@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string ['pluginname'] = 'CSV 格式';
-$string ['pluginname_help'] = '此插件是导入CSV格式的多选题（All-or-nothing 插件必须安装，各选项以英文“;”分隔），判断题，Shortanswer和essay暂不支持。格式请参考示例文件：<br/>
+$string ['pluginname_help'] = '此插件是导入CSV格式的多选题（All-or-nothing 插件必须安装，各选项以英文“;”分隔），判断题。注：Shortanswer和essay暂不支持。格式请参考示例文件：<br/>
 		<a href="/question/format/csv/multichoice.csv">multichoice.csv</a><br />
 		<a href="/question/format/csv/sampleTruefalse.csv">sampleTruefalse.csv</a><br />
 		<a href="/question/format/csv/sampleShortanswer.csv">sampleShortanswer.csv</a><br />
