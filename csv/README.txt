@@ -1,26 +1,36 @@
-NEW in 3.6.02
+NEW in 3.6
 
 # Description
 Question formats import plugin 
 
 ==============================
 
-This plugin contains support for importing only multichoice questions in CSV format file in question bank and
-exporting questions from a question bank in a CSV file.
-The CSV format is a very simple way of creating multiple choice questions using a CSV(Comma separated value) file.
-The first line of the CSV file must contain the headers separated with commas.
+This plugin contains support for importing multichoice and truefalse questions in CSV format file in question bank.
+The CSV format is a very simple way of creating questions using a CSV(Comma separated value) file.You can edit a lot of questions in Excel or in WPS table,then save the file in CSV format.PS,if the language is not english,you may open the file with  the app like notepad to change the coding to UTF-8.
+The first line of the CSV file must contain the headers separated with commas,UTF-8 coding
+===============================
 
-The simple CSV file used for import should have the following structure :
--A simple CSV file with all questions in comma separated value form with a .csv extension
--The first line contains the headers separated with commas for example
-  questionname,questiontext,A,B,C,D,Answer 1,Answer 2
+# Multichoice questions format
+The multichoice questions CSV file used for import should have the following structure :
+-A CSV file with all questions in comma separated value form with a .csv extension
+-The first line contains the headers separated with commas for example:
+ multichoicename,questiontext,choices,answer,generalfeedback,defaultmark,qtype
 -Next lines contain the details of the question,
-  each of the line contain one question name, question text, four option, and
-  either one or two answers again all separated by commas.
+  each of the line contain question name, question text, choices(semicolon ';' separated value), and
+  answers,generalfeedback,defaultmark,qtype(multichoice or single),all separated by commas.
 -Each line contains all the details regarding the one question ie. question name, question text, options, and answer.
--You can also download the sample CSV(sample.csv) file for your reference.
+-You can also download the multichoice sample CSV(sampleMultichoice.csv) file for your reference.
 
-Each line will contain the details about the one question.
+# truefalse questions format
+The truefalse questions CSV file used for import should have the following structure :
+-A CSV file with all questions in comma separated value form with a .csv extension,UTF-8 coding
+-The first line contains the headers separated with commas for example:
+ truefalsename,questiontext,answer,generalfeedback,defaultmark
+-Next lines contain the details of the question,
+  each of the line contain question name, question text,answer（true or false，1 or 0）,generalfeedback,defaultmark,all separated by commas.
+-You can also download the truefalse sample CSV(sampleTruefalse.csv) file for your reference.
+
+
 
 
 =============================================================================================================================
@@ -35,10 +45,7 @@ IMPORTANT NOTES:
 you must include that text between the double quotes(") like below in the 2nd question, where entire
 question text is included between the double quotes like this "3, 4, 7, 8, 11, 12, ... What number should come next?"
 
-the choices 
-
-questionname,questiontext,choices,answer,generalfeedback,defaultmark,qtype
-
+ multichoicename,questiontext,choices,answer,generalfeedback,defaultmark,qtype
  Question1,can you choose all the right answers?, A is ok;B is wrong ;C is ok;D is ok, ACD,right answers are ACD,2,multichosce
  Question2,"3, 4, 7, 8, 11, 12, ... What number should come next?", 7;10;14;15, D,right answers is D,1,single
 
