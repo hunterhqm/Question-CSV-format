@@ -68,122 +68,173 @@ class qformat_csv extends qformat_default {
 		global $CFG;
 		require_once ($CFG->libdir . '/csvlib.class.php');
 		
-		$questions = array ();
-		$headers = explode ( ',', $lines [0] );
-		
-		$headerscount = count ( $headers );
 		// 行数少于3行
 		if (count ( $lines ) < 2) {
 			echo get_string ( 'noquestion_error', 'qformat_csv' );
 			return 0;
 		}
-		// Get All the Header Values from the CSV file.
-		for($rownum = 1; $rownum < count ( $lines ); $rownum ++) {
-			// 试题信息,0=>questionname,questiontext,choices,answer,generalfeedback,defaultmark,qtype
-			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' ); // Ignore the commas(,) within the double quotes (").
+		$questions = array ();
+		$header = trim ( $lines [0] );
+		
+		$supportCSV = array (
+				'multichoice' => 'multichoicename,questiontext,choices,answer,generalfeedback,defaultmark,qtype',
+				'essay' => 'essayname,questiontext,responsetemplate,graderinfo,generalfeedback,defaultmark',
+				'shortanswer' => 'shortanswername,questiontext,answer,fraction,generalfeedback,defaultmark',
+				'truefalse' => 'truefalsename,questiontext,answer,generalfeedback,defaultmark' 
+		);
+		
+		switch ($header) {
+			case $supportCSV ['multichoice'] :
+				$questions = $this->get_multichoice_questions ( $lines );
+				// var_dump($questions);
+				break;
+			case $supportCSV ['essay'] :
+				$questions = $this->get_essay_questions ( $lines );
+				break;
+			case $supportCSV ['shortanswer'] :
+				$questions = $this->get_shortanswer_questions ( $lines );
+				break;
+			case $supportCSV ['truefalse'] :
+				$questions = $this->get_truefalse_questions ( $lines );
+				break;
 			
-			$columncount = count ( $rowdata );
-			if ($columncount != $headerscount) {
-				if ($columncount > $headerscount) {
-					echo get_string ( 'commma_error', 'qformat_csv', $rownum );
-					return 0;
-				} else if ($columncount < $headerscount) {
-					// Entire question with options and answer is not in one line, new line found.
-					echo get_string ( 'newline_error', 'qformat_csv', $rownum );
-					return 0;
-				} else {
-					// There are more than 7 values or there will be extra comma making them more then 7 values.
-					echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
-					return 0;
-				}
-			}
-			$questions [] = $this->get_multichoice_question ( $rowdata );
+			default :
+				var_dump ( 'err: ', $header );
+				echo get_string ( 'csv_file_error', 'qformat_csv' );
+				return 0;
+				break;
 		}
 		
 		return $questions;
 	}
+	
 	/**
 	 *
 	 * @param
 	 *        	$rowdata
 	 */
-	private function get_multichoice_question($rowdata) {
-		// 0=>questionname,questiontext,choices,answer,generalfeedback,defaultmark,qtype
-		question_bank::get_qtype ( 'multichoice' );
-		$question = $this->defaultquestion ();
-		$question->name = trim ( $rowdata [0] );
-		$question->questiontext = htmlspecialchars ( trim ( $rowdata [1] ), ENT_NOQUOTES );
-		$choices = explode ( ';', $rowdata [2] );
-		if (count ( $choices ) < 3) {
-			return 0;
-		}
-		$answer = trim ( $rowdata [3] );
-		$question->answernumbering = 'ABCD';
-		$question->generalfeedback = $this->strToHTMLformat ( trim ( $rowdata [4] ) );
-		$question->defaultmark = ( int ) ($rowdata [5]);
-		// 处理选项及答案
-		// answer, 默认选项序号为ABCD……，
-		// 选择题选项至少为3项
-		foreach ( $choices as $value ) {
-			$question->answer [] = $this->strToHTMLformat ( trim ( $value ) );
-			$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) ); // 必填，否则写数据库出错
-		}
-		$numcorrectans = 0;
-		$fraction = array ();
+	private function get_multichoice_questions($lines) {
+		$questions = array ();
+		$headers = explode ( ',', $lines [0] );
 		
-		for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
-			if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // 从A开始判断,答案里是否有A。
-				$fraction [$ABCD] = 0; // 不在正确答案中，则得分为0
-			} else {
-				$fraction [$ABCD] = 1;
-				$numcorrectans ++;
-			}
-		}
-		
-		if ($numcorrectans < 1) {
-			echo get_string ( 'noanswer_error', 'qformat_csv', $rownum );
-			return 0;
-		}
-		
-		$qtype = trim ( $rowdata [6] );
-		switch ($qtype) {
-			case 'multichoiceset' :
-			case 'multichoice' :
-				$question->qtype = 'multichoiceset';
-				// all or nothing 插件，正确答案的correctanswer为1，错误答案为0
-				$question->correctanswer = $fraction;
-				break;			
-			/* ///这个提示写入数据库失败，不知道为什么？？？
-			 * case 'multichoice' :
-			 * $question->qtype = 'multichoice';
-			 * $fac = 1 / $numcorrectans;
-			 * for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
-			 * if ($fraction [$ABCD] > 0) {
-			 * $fraction [$ABCD] = $fac;
-			 * }
-			 * }
-			 * $question->fraction = $fraction;
-			 * break;
-			 */
-			case 'single' :
-				$question->qtype = 'multichoice';
-				$question->single = 1;
-				if (1 != $numcorrectans) {
-					echo get_string ( 'single_answer_num_error', 'qformat_csv', $rownum );
-					return 0;
-				}
-				$question->fraction = $fraction;
-				break;
-			default :
+		for($rownum = 1; $rownum < count ( $lines ); $rownum ++) {
+			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' ); // Ignore the commas(,) within the double quotes (").
+			
+			if (count ( $rowdata ) != count ( $headers )) {
 				echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
 				return 0;
-				break;
-				;
+			}
+			// 0=>multichoicename,questiontext,choices,answer,generalfeedback,defaultmark,qtype
+			question_bank::get_qtype ( 'multichoice' );
+			$question = $this->defaultquestion ();
+			$question->name = trim ( $rowdata [0] );
+			$question->questiontext = htmlspecialchars ( trim ( $rowdata [1] ), ENT_NOQUOTES );
+			$choices = explode ( ';', $rowdata [2] );
+			if (count ( $choices ) < 3) {
+				return 0;
+			}
+			$answer = trim ( $rowdata [3] );
+			$question->answernumbering = 'ABCD';
+			$question->generalfeedback = $this->strToHTMLformat ( trim ( $rowdata [4] ) );
+			$question->defaultmark = ( int ) ($rowdata [5]);
+			// 处理选项及答案
+			// answer, 默认选项序号为ABCD……，
+			// 选择题选项至少为3项
+			foreach ( $choices as $value ) {
+				$question->answer [] = $this->strToHTMLformat ( trim ( $value ) );
+				$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) ); // 必填，否则写数据库出错
+			}
+			$numcorrectans = 0;
+			$fraction = array ();
+			
+			for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
+				if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // 从A开始判断,答案里是否有A。
+					$fraction [$ABCD] = 0; // 不在正确答案中，则得分为0
+				} else {
+					$fraction [$ABCD] = 1;
+					$numcorrectans ++;
+				}
+			}
+			
+			if ($numcorrectans < 1) {
+				echo get_string ( 'noanswer_error', 'qformat_csv', $rownum );
+				return 0;
+			}
+			
+			$qtype = trim ( $rowdata [6] );
+			switch ($qtype) {
+				case 'multichoiceset' :
+				case 'multichoice' :
+					$question->qtype = 'multichoiceset';
+					// all or nothing 插件，正确答案的correctanswer为1，错误答案为0
+					$question->correctanswer = $fraction;
+					break;
+				/*
+				 * ///这个提示写入数据库失败，不知道为什么？？？
+				 * case 'multichoice' :
+				 * $question->qtype = 'multichoice';
+				 * $fac = 1 / $numcorrectans;
+				 * for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
+				 * if ($fraction [$ABCD] > 0) {
+				 * $fraction [$ABCD] = $fac;
+				 * }
+				 * }
+				 * $question->fraction = $fraction;
+				 * break;
+				 */
+				case 'single' :
+					$question->qtype = 'multichoice';
+					$question->single = 1;
+					if (1 != $numcorrectans) {
+						echo get_string ( 'single_answer_num_error', 'qformat_csv', $rownum );
+						return 0;
+					}
+					$question->fraction = $fraction;
+					break;
+				default :
+					echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
+					return 0;
+					break;
+					;
+			}
+			$questions [] = $question;
 		}
-		
-		// Clear array for next question set.
-		// $question = $this->defaultquestion ();
-		return $question;
+		return $questions;
+	}
+	private function get_truefalse_questions($lines) {
+		$questions = array ();
+		$headers = explode ( ',', $lines [0] );
+		for($rownum = 1; $rownum < count ( $lines ); $rownum ++) {
+			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' ); // Ignore the commas(,) within the double quotes (").
+			
+			if (count ( $rowdata ) != count ( $headers )) {
+				echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
+				return 0;
+			}
+			// 0=>truefalsename,questiontext,answer,generalfeedback,defaultmark
+			question_bank::get_qtype ( 'truefalse' );
+			$question = $this->defaultquestion ();
+			$question->name = trim ( $rowdata [0] );
+			$question->qtype = 'truefalse';
+			$question->questiontext = htmlspecialchars ( trim ( $rowdata [1] ), ENT_NOQUOTES );
+			$answer = ( int ) ($rowdata [2]); // true =1,false=0;
+			$question->generalfeedback = trim ( $rowdata [3] );
+			$question->generalfeedbackformat = '1';
+			$question->penalty = '1';
+			$question->defaultmark = ( int ) ($rowdata [4]);
+			
+			if ($answer > 0) {
+				$question->answer = true;
+			} else {
+				$question->answer = false;
+			}
+			$question->correctanswer = $question->answer;
+			$question->fraction = 1;
+			$question->feedbacktrue = $this->strToHTMLformat ( trim ( '' ) );
+			$question->feedbackfalse = $this->strToHTMLformat ( trim ( '' ) );
+			$questions [] = $question;
+		}
+		return $questions;
 	}
 	protected function strToHTMLformat($text) {
 		return array (
