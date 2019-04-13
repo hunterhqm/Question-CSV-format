@@ -6,7 +6,7 @@ Question formats import plugin
 ==============================
 
 This plugin contains support for importing multichoice and truefalse questions in CSV format file in question bank.
-The CSV format is a very simple way of creating multiple choice questions using a CSV(Comma separated value) file.
+The CSV format is a very simple way of creating questions using a CSV(Comma separated value) file.You can edit a lot of questions in Excel or in WPS table,then save the file in CSV format.PS,if the language is not english,you may open the file with  the app like notepad to change the coding to UTF-8.
 The first line of the CSV file must contain the headers separated with commas,UTF-8 coding
 ===============================
 
