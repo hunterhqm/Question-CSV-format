@@ -18,12 +18,12 @@
  * Strings for component 'qformat_csv', language 'en'
  *
  * @package    qformat_csv
- * @copyright  2018 Gopal Sharma <gopalsharma66@gmail.com>
+ * @copyright  2019 hunterhqm <hunterhqm@sina.cn>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['pluginname'] = 'CSV format';
-$string['pluginname_help'] = 'This is a CSV format for importing multiple choice questions (All-or-nothing plugin must be installed)£¬truefalse questions from a CSV(Comma separated value) file. Please find the Sample csv file for your reference.<br />
+$string['pluginname_help'] = 'This is a CSV format for importing multiple choice questions (All-or-nothing plugin must be installed)ï¿½ï¿½truefalse questions from a CSV(Comma separated value) file. Please find the Sample csv file for your reference.<br />
 		<a href="/question/format/csv/multichoice.csv">multichoice.csv</a><br />
 		<a href="/question/format/csv/sampleTruefalse.csv">sampleTruefalse.csv</a><br />
 		<a href="/question/format/csv/sampleShortanswer.csv">sampleShortanswer.csv</a><br />

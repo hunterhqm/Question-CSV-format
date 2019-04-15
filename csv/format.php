@@ -68,7 +68,7 @@ class qformat_csv extends qformat_default {
 		global $CFG;
 		require_once ($CFG->libdir . '/csvlib.class.php');
 		
-		// ÐÐÊýÉÙÓÚ3ÐÐ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½3ï¿½ï¿½
 		if (count ( $lines ) < 2) {
 			echo get_string ( 'noquestion_error', 'qformat_csv' );
 			return 0;
@@ -137,19 +137,19 @@ class qformat_csv extends qformat_default {
 			$question->answernumbering = 'ABCD';
 			$question->generalfeedback = $this->strToHTMLformat ( trim ( $rowdata [4] ) );
 			$question->defaultmark = ( int ) ($rowdata [5]);
-			// ´¦ÀíÑ¡Ïî¼°´ð°¸
-			// answer, Ä¬ÈÏÑ¡ÏîÐòºÅÎªABCD¡­¡­£¬
-			// Ñ¡ÔñÌâÑ¡ÏîÖÁÉÙÎª3Ïî
+			// ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½î¼°ï¿½ï¿½
+			// answer, Ä¬ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ÎªABCDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			// Ñ¡ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª3ï¿½ï¿½
 			foreach ( $choices as $value ) {
 				$question->answer [] = $this->strToHTMLformat ( trim ( $value ) );
-				$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) ); // ±ØÌî£¬·ñÔòÐ´Êý¾Ý¿â³ö´í
+				$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) ); // ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½
 			}
 			$numcorrectans = 0;
 			$fraction = array ();
 			
 			for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
-				if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // ´ÓA¿ªÊ¼ÅÐ¶Ï,´ð°¸ÀïÊÇ·ñÓÐA¡£
-					$fraction [$ABCD] = 0; // ²»ÔÚÕýÈ·´ð°¸ÖÐ£¬ÔòµÃ·ÖÎª0
+				if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // ï¿½ï¿½Aï¿½ï¿½Ê¼ï¿½Ð¶ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Aï¿½ï¿½
+					$fraction [$ABCD] = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ã·ï¿½Îª0
 				} else {
 					$fraction [$ABCD] = 1;
 					$numcorrectans ++;
@@ -166,11 +166,11 @@ class qformat_csv extends qformat_default {
 				case 'multichoiceset' :
 				case 'multichoice' :
 					$question->qtype = 'multichoiceset';
-					// all or nothing ²å¼þ£¬ÕýÈ·´ð°¸µÄcorrectanswerÎª1£¬´íÎó´ð°¸Îª0
+					// all or nothing ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ð°¸µï¿½correctanswerÎª1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0
 					$question->correctanswer = $fraction;
 					break;
 				/*
-				 * ///Õâ¸öÌáÊ¾Ð´ÈëÊý¾Ý¿âÊ§°Ü£¬²»ÖªµÀÎªÊ²Ã´£¿£¿£¿
+				 * ///ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½Öªï¿½ï¿½ÎªÊ²Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				 * case 'multichoice' :
 				 * $question->qtype = 'multichoice';
 				 * $fac = 1 / $numcorrectans;
@@ -232,6 +232,54 @@ class qformat_csv extends qformat_default {
 			$question->fraction = 1;
 			$question->feedbacktrue = $this->strToHTMLformat ( trim ( '' ) );
 			$question->feedbackfalse = $this->strToHTMLformat ( trim ( '' ) );
+			$questions [] = $question;
+		}
+		return $questions;
+	}
+	private function get_shortanswer_questions($lines) {
+		$questions = array ();
+		$headers = explode ( ',', $lines [0] );
+		for($rownum = 1; $rownum < count ( $lines ); $rownum ++) {
+			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' ); // Ignore the commas(,) within the double quotes (").
+			
+			if (count ( $rowdata ) != count ( $headers )) {
+				echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
+				return 0;
+			}
+			// 0=>shortanswername,questiontext,answer,fraction,generalfeedback,defaultmark
+			question_bank::get_qtype ( 'shortanswer' );
+			$question = $this->defaultquestion ();
+			$question->name = trim ( $rowdata [0] );
+			$question->qtype = 'shortanswer';
+			$question->questiontext = htmlspecialchars ( trim ( $rowdata [1] ), ENT_NOQUOTES );
+			$answers = explode ( ';', trim ( $rowdata [2] ) ); // true =1,false=0;
+			
+			$fractions = explode ( ';', trim ( $rowdata [3] ) );
+			$question->generalfeedback = trim ( $rowdata [4] );
+			$question->generalfeedbackformat = '1';
+			$question->defaultmark = ( int ) ($rowdata [5]);
+			$answersmum = count ( $answers );
+			
+			if ($answersmum < 1) {
+				echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
+				return 0;
+			} elseif ($answersmum == 1) {
+				$question->answer [] = $answers [0];
+				$question->fraction [] = 1;
+				$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) );
+			} elseif ($answersmum > 1) {
+				
+				for($i = 0; $i < $answersmum; $i ++) {
+					$question->answer [$i] = $answers [$i];
+					$fraction = ( float ) ($fractions [$i]);
+					if ($fraction > 1) {
+						$fraction = 1;
+					}
+					$question->fraction [$i] = $fraction;
+					$question->feedback [$i] = $this->strToHTMLformat ( trim ( '' ) );
+				}
+			}
+			
 			$questions [] = $question;
 		}
 		return $questions;

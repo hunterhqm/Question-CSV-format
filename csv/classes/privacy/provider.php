@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for qformat_csv.
  *
  * @package    qformat_csv
- * @copyright  2018 Gopal Sharma <gopalsharma66@gmail.com>
+ * @copyright  2019 hunterhqm <hunterhqm@sina.cn>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for qformat_csv implementing null_provider.
  *
- * @copyright  2018 Gopal Sharma <gopalsharma66@gmail.com>
+ * @copyright  2019 hunterhqm <hunterhqm@sina.cn>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
