@@ -23,7 +23,7 @@
  */
 $string ['pluginname'] = 'CSV 格式';
 $string ['pluginname_help'] = '此插件是导入CSV格式的多选题（multichoice，All-or-nothing 插件必须安装，各选项以英文“;”分隔），判断题（Truefalse），填空题（Shortanswer），问答题（Essay）。格式请参考示例文件：<br/>
-		<a href="/question/format/csv/multichoice.csv">multichoice.csv</a><br />
+		<a href="/question/format/csv/sampleMultichoice.csv">sampleMultichoice.csv</a><br />
 		<a href="/question/format/csv/sampleTruefalse.csv">sampleTruefalse.csv</a><br />
 		<a href="/question/format/csv/sampleShortanswer.csv">sampleShortanswer.csv</a><br />
 		<a href="/question/format/csv/sampleEssay.csv">sampleEssay.csv</a><br />';

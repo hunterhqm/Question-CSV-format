@@ -135,7 +135,8 @@ class qformat_csv extends qformat_default {
 			}
 			$answer = trim ( $rowdata [3] );
 			$question->answernumbering = 'ABCD';
-			$question->generalfeedback = $this->strToHTMLformat ( trim ( $rowdata [4] ) );
+			$question->generalfeedback = trim ( $rowdata [4] );
+			$question->generalfeedbackformat = '1';
 			$question->defaultmark = ( int ) ($rowdata [5]);
 			// ����ѡ���
 			// answer, Ĭ��ѡ�����ΪABCD������
@@ -149,7 +150,7 @@ class qformat_csv extends qformat_default {
 			
 			for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
 				if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // ��A��ʼ�ж�,�����Ƿ���A��
-					$fraction [$ABCD] = 0; // ������ȷ���У���÷�Ϊ0
+					$fraction [$ABCD] = 0;
 				} else {
 					$fraction [$ABCD] = 1;
 					$numcorrectans ++;
@@ -166,29 +167,31 @@ class qformat_csv extends qformat_default {
 				case 'multichoiceset' :
 				case 'multichoice' :
 					$question->qtype = 'multichoiceset';
-					// all or nothing �������ȷ�𰸵�correctanswerΪ1�������Ϊ0
+					// all or nothing multichoice format
 					$question->correctanswer = $fraction;
 					break;
+				
 				/*
-				 * ///�����ʾд�����ݿ�ʧ�ܣ���֪��Ϊʲô������
+				 * dml err,,,,
 				 * case 'multichoice' :
 				 * $question->qtype = 'multichoice';
-				 * $fac = 1 / $numcorrectans;
+				 * $fac = ( float ) (1 / $numcorrectans);
 				 * for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
-				 * if ($fraction [$ABCD] > 0) {
+				 * if ($fraction [$ABCD] == 1) {
 				 * $fraction [$ABCD] = $fac;
 				 * }
 				 * }
 				 * $question->fraction = $fraction;
 				 * break;
 				 */
+				
 				case 'single' :
-					$question->qtype = 'multichoice';
-					$question->single = 1;
 					if (1 != $numcorrectans) {
 						echo get_string ( 'single_answer_num_error', 'qformat_csv', $rownum );
 						return 0;
 					}
+					$question->qtype = 'multichoice';
+					$question->single = 1;
 					$question->fraction = $fraction;
 					break;
 				default :
@@ -197,6 +200,7 @@ class qformat_csv extends qformat_default {
 					break;
 					;
 			}
+			var_dump ( $question );
 			$questions [] = $question;
 		}
 		return $questions;
@@ -279,6 +283,40 @@ class qformat_csv extends qformat_default {
 					$question->feedback [$i] = $this->strToHTMLformat ( trim ( '' ) );
 				}
 			}
+			
+			$questions [] = $question;
+		}
+		return $questions;
+	}
+	private function get_essay_questions($lines) {
+		$questions = array ();
+		$headers = explode ( ',', $lines [0] );
+		for($rownum = 1; $rownum < count ( $lines ); $rownum ++) {
+			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' ); // Ignore the commas(,) within the double quotes (").
+			
+			if (count ( $rowdata ) != count ( $headers )) {
+				echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
+				return 0;
+			}
+			// 0=>essayname,questiontext,responsetemplate,graderinfo,generalfeedback,defaultmark
+			
+			question_bank::get_qtype ( 'essay' );
+			$question = $this->defaultquestion ();
+			$question->name = trim ( $rowdata [0] );
+			$question->penalty =0;
+			$question->length=1;
+			$question->responseformat = 'editor';
+			$question->responserequired =1;
+			$question->responsefieldlines = 15;
+			$question->attachments = 0;
+			$question->attachmentsrequired = 0;
+			$question->qtype = 'essay';
+			$question->questiontext = htmlspecialchars ( trim ( $rowdata [1] ), ENT_NOQUOTES );
+			$question->responsetemplate = $this->strToHTMLformat ( trim ( $rowdata [2] ) );
+			$question->graderinfo = $this->strToHTMLformat ( trim ( $rowdata [3] ) );
+			$question->generalfeedback = trim ( $rowdata [4] );
+			$question->generalfeedbackformat = '1';
+			$question->defaultmark = ( int ) ($rowdata [5]);
 			
 			$questions [] = $question;
 		}
