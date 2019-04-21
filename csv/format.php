@@ -198,7 +198,7 @@ class qformat_csv extends qformat_default {
 					break;
 					;
 			}
-			var_dump ( $question );
+			// var_dump ( $question );
 			$questions [] = $question;
 		}
 		return $questions;
