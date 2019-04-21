@@ -138,18 +138,16 @@ class qformat_csv extends qformat_default {
 			$question->generalfeedback = trim ( $rowdata [4] );
 			$question->generalfeedbackformat = '1';
 			$question->defaultmark = ( int ) ($rowdata [5]);
-			// ����ѡ���
-			// answer, Ĭ��ѡ�����ΪABCD������
-			// ѡ����ѡ������Ϊ3��
+			
 			foreach ( $choices as $value ) {
 				$question->answer [] = $this->strToHTMLformat ( trim ( $value ) );
-				$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) ); // �������д���ݿ����
+				$question->feedback [] = $this->strToHTMLformat ( trim ( '' ) ); // if null,may cause dml err;
 			}
 			$numcorrectans = 0;
 			$fraction = array ();
 			
 			for($ABCD = 0; $ABCD < count ( $choices ); $ABCD ++) {
-				if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // ��A��ʼ�ж�,�����Ƿ���A��
+				if (stripos ( $answer, chr ( 65 + $ABCD ) ) === false) { // 65，‘A’
 					$fraction [$ABCD] = 0;
 				} else {
 					$fraction [$ABCD] = 1;
@@ -167,12 +165,12 @@ class qformat_csv extends qformat_default {
 				case 'multichoiceset' :
 				case 'multichoice' :
 					$question->qtype = 'multichoiceset';
-					// all or nothing multichoice format
+					// all-or-nothing multichoice format
 					$question->correctanswer = $fraction;
 					break;
 				
 				/*
-				 * dml err,,,,
+				 * dml err,,,,to be solved
 				 * case 'multichoice' :
 				 * $question->qtype = 'multichoice';
 				 * $fac = ( float ) (1 / $numcorrectans);
@@ -244,7 +242,7 @@ class qformat_csv extends qformat_default {
 		$questions = array ();
 		$headers = explode ( ',', $lines [0] );
 		for($rownum = 1; $rownum < count ( $lines ); $rownum ++) {
-			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' ); // Ignore the commas(,) within the double quotes (").
+			$rowdata = str_getcsv ( $lines [$rownum], ',', '"' );
 			
 			if (count ( $rowdata ) != count ( $headers )) {
 				echo get_string ( 'csv_file_error', 'qformat_csv', $rownum );
@@ -256,7 +254,7 @@ class qformat_csv extends qformat_default {
 			$question->name = trim ( $rowdata [0] );
 			$question->qtype = 'shortanswer';
 			$question->questiontext = htmlspecialchars ( trim ( $rowdata [1] ), ENT_NOQUOTES );
-			$answers = explode ( ';', trim ( $rowdata [2] ) ); // true =1,false=0;
+			$answers = explode ( ';', trim ( $rowdata [2] ) );
 			
 			$fractions = explode ( ';', trim ( $rowdata [3] ) );
 			$question->generalfeedback = trim ( $rowdata [4] );
@@ -303,10 +301,10 @@ class qformat_csv extends qformat_default {
 			question_bank::get_qtype ( 'essay' );
 			$question = $this->defaultquestion ();
 			$question->name = trim ( $rowdata [0] );
-			$question->penalty =0;
-			$question->length=1;
+			$question->penalty = 0;
+			$question->length = 1;
 			$question->responseformat = 'editor';
-			$question->responserequired =1;
+			$question->responserequired = 1;
 			$question->responsefieldlines = 15;
 			$question->attachments = 0;
 			$question->attachmentsrequired = 0;

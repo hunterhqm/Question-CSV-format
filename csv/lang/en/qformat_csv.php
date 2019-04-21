@@ -23,7 +23,7 @@
  */
 
 $string['pluginname'] = 'CSV format';
-$string['pluginname_help'] = 'This is a CSV format for importing multiple choice questions (All-or-nothing plugin must be installed)��truefalse questions from a CSV(Comma separated value) file. Please find the Sample csv file for your reference.<br />
+$string['pluginname_help'] = 'This is a CSV format for importing multiple choice (All-or-nothing plugin must be installed),truefalse,shortanswers,and essay questions from a CSV(Comma separated value) file. Please find the Sample csv file for your reference.<br />
 		<a href="/question/format/csv/sampleMultichoice.csv">sampleMultichoice.csv</a><br />
 		<a href="/question/format/csv/sampleTruefalse.csv">sampleTruefalse.csv</a><br />
 		<a href="/question/format/csv/sampleShortanswer.csv">sampleShortanswer.csv</a><br />
